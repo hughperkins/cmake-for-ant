@@ -12,8 +12,7 @@ Example ant file
             <property name="cmake_home" value="/usr" />
             <taskdef name="cmake" classname="CMake" classpath="jar/cmake-for-ant.jar" />
             <cmake cmakehome="${cmake_home}" releasetype="Release" generator="${generator}" 
-                 srcdir="cpp" builddir="cpp/build">
-            </cmake>
+                   srcdir="cpp" builddir="cpp/build" />
         </target>
     </project>
 
