@@ -1,0 +1,31 @@
+<project default="jar">
+    <property name="generator" value="Unix Makefiles" />
+    <property name="cmake_home" value="/usr" />
+
+  <path id="project.class.path">
+    <pathelement path="${java.class.path}/"/>
+  </path>
+
+   <target name="compile">
+      <mkdir dir="build/classes"/>
+      <javac srcdir="src" destdir="build/classes"  debug="true" includeantruntime="false" >
+           <classpath refid="project.class.path" />
+      </javac>
+      <copy todir="build/classes" >
+          <fileset dir="src" />
+      </copy>
+   </target>
+
+   <target name="jar" depends="compile">
+      <mkdir dir="jar"/>
+      <jar destfile="jar/cmake-for-ant.jar" basedir="build/classes">
+      </jar>
+   </target>
+
+    <target name="test" depends="jar">        
+        <subant buildpath="test" >
+            <property name="build.dir" value="test/test"/>
+        </subant>
+    </target>
+</project>
+
