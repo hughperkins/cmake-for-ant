@@ -12,5 +12,9 @@
              srcdir="cpp" builddir="cpp/build">
         </cmake>
     </target>
+
+    <target name="clean">
+        <delete dir="cpp/build" />
+    </target>
 </project>
 

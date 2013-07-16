@@ -23,9 +23,12 @@
    </target>
 
     <target name="test" depends="jar">        
-        <subant buildpath="test" >
-            <property name="build.dir" value="test/test"/>
-        </subant>
+        <subant buildpath="test" />
+    </target>
+
+    <target name="clean">
+        <subant buildpath="test" target="clean" />
+        <delete dir="build" />
     </target>
 </project>
 
