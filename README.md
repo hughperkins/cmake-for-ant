@@ -67,6 +67,12 @@ On Windows, if you're using Visual Studio 2010:
     "c:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
     ant test -Dcmake_home="C:\Program Files (x86)\CMake-2.8" -Dgenerator="Visual Studio 11"
 
+How does it compare to cmakeant?
+================================
+
+ * it works with Visual Studio 2010 and Visual Studio 2012
+ * it's easy to configure it to point to your CMake installation
+
 License
 =======
 
