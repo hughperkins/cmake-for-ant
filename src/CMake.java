@@ -98,7 +98,7 @@ public class CMake extends Task {
             }   
         } else if( generator.startsWith("Visual Studio") ) {
             try {
-                execUsingGobbler(new String[]{"msbuild", "Project.sln", "/p:Configuration=" + releaseType }, builddir );
+                execUsingGobbler(new String[]{"C:/WINDOWS/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe", "Project.sln", "/p:Configuration=" + releaseType }, builddir );
             } catch( Exception e ) {
                 throw new BuildException("Error running msbuild");
             }   
