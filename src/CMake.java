@@ -14,6 +14,7 @@ public class CMake extends Task {
     String generator;
     String srcdir;
     String builddir;
+    String artifactdirproperty;
 
     // from http://stackoverflow.com/questions/14165517/processbuilder-capturing-stdout-and-stderr-of-started-processes-to-another-stre
     class StreamGobbler extends Thread {
@@ -71,6 +72,9 @@ public class CMake extends Task {
     public void setBuilddir( String builddir ) {
         this.builddir = builddir;
     }
+    public void setArtifactdirproperty( String artifactdirproperty ) {
+        this.artifactdirproperty = artifactdirproperty;
+    }
     public void execute() throws BuildException {
         String basedir = getProject().getBaseDir().getAbsolutePath();
         srcdir = new File( basedir + "/" + srcdir ).getAbsolutePath();
@@ -83,6 +87,16 @@ public class CMake extends Task {
         System.out.println("Srcdir: " + srcdir);
         System.out.println("Builddir: " + builddir);
 
+        if( !new File( cmakeHome + "/bin/cmake" ).exists() && !new File( cmakeHome + "/bin/cmake.exe" ).exists() ) {
+            throw new BuildException( new File( cmakeHome + "/bin/cmake" ).getAbsolutePath() + " doesn't exist.  Please check -Dcmake_home");
+        }
+        if( !new File( builddir ).exists() ) {
+            throw new BuildException( "builddir " + srcdir + " doesn't exist.");
+        }
+        if( !new File( builddir ).exists() ) {
+            throw new BuildException( "srcdir " + builddir + " doesn't exist.");
+        }
+
         try{ 
             execUsingGobbler( new String[]{ cmakeHome + "/bin/cmake", "-G", generator,
                 "-D", "CMAKE_BUILD_TYPE:STRING=" + releaseType, srcdir }, builddir );
@@ -93,17 +107,23 @@ public class CMake extends Task {
         if( generator.equals("Unix Makefiles") ) {
             try {
                 execUsingGobbler(new String[]{"make"}, builddir );
+                if( artifactdirproperty != null ) {
+                    getProject().setProperty(artifactdirproperty, builddir );
+                }
             } catch( Exception e ) {
                 throw new BuildException("Error running make");
             }   
         } else if( generator.startsWith("Visual Studio") ) {
             try {
                 execUsingGobbler(new String[]{"C:/WINDOWS/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe", "Project.sln", "/p:Configuration=" + releaseType }, builddir );
+                if( artifactdirproperty != null ) {
+                    getProject().setProperty(artifactdirproperty, builddir + "\\" + releaseType );
+                }
             } catch( Exception e ) {
                 throw new BuildException("Error running msbuild");
             }   
         } else {
-            throw new BuildException("Generator " + generator + " not supported by CmakeFromAnt");
+            throw new BuildException("Generator " + generator + " not supported by cmake-for-ant.");
         }
 
     }

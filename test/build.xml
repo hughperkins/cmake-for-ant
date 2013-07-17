@@ -5,7 +5,10 @@
         <taskdef name="cmake" classname="CMake" classpath="../jar/cmake-for-ant.jar" />
         <mkdir dir="cpp/build" />
         <cmake cmakehome="${cmake_home}" releasetype="Release" generator="${generator}" 
-             srcdir="cpp" builddir="cpp/build" />
+             srcdir="cpp" builddir="cpp/build" artifactdirproperty="cmakeoutdir" />
+        <exec executable="${cmakeoutdir}/test" outputproperty="testout" />
+        <condition property="testoutfail"><not><equals arg1="test!" arg2="${testout}"/></not></condition>
+        <fail if="testoutfail" message="failed to run test executable" />
     </target>
 
     <target name="clean">
