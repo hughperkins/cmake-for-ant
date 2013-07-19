@@ -57,13 +57,22 @@ public class CMake extends Task {
         process.waitFor();
     }
 
+    String stripQuotes( String value ) {
+        if( value.startsWith("\"") && value.endsWith("\"" ) ) {
+            value = value.substring(1, value.length() - 1 );
+        }
+        return value;
+    }
+
     public void setCMakeHome( String cmakeHome ) {
+        cmakeHome = stripQuotes( cmakeHome );
         this.cmakeHome = cmakeHome;
     }
     public void setReleaseType( String releaseType ) {
         this.releaseType = releaseType;
     }
     public void setGenerator( String generator ) {
+        generator= stripQuotes( generator );
         this.generator = generator;
     }
     public void setSrcdir( String srcdir ) {
