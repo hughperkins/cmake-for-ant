@@ -73,6 +73,11 @@ License
 
 Mozilla Public License v2.0
 
+Build server
+============
+
+There is a Bamboo build server at https://cmake-for-ant.atlassian.net/builds/browse/CMAKEFORAN-CMAKEFORANT , from which the jar can be downloaded, and which can validate the build.
+
 How easy is it to maintain?
 ===========================
 
