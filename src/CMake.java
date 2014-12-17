@@ -194,7 +194,8 @@ public class CMake extends Task {
             }   
         } else if( generator.startsWith("Visual Studio") ) {
             try {
-                execUsingGobbler(new String[]{"C:/WINDOWS/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe", "ALL_BUILD.vcxproj", "/p:Configuration=" + releaseType }, builddir );
+                String winDir = System.getenv("WINDIR");
+                execUsingGobbler(new String[]{ winDir + "/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe", "ALL_BUILD.vcxproj", "/p:Configuration=" + releaseType }, builddir );
                 if( artifactdirproperty != null ) {
                     getProject().setProperty(artifactdirproperty, builddir + "\\" + releaseType );
                 }
