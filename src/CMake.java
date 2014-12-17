@@ -84,6 +84,18 @@ public class CMake extends Task {
     public void setArtifactdirproperty( String artifactdirproperty ) {
         this.artifactdirproperty = artifactdirproperty;
     }
+    public static final int getJvmBits() {
+        if( System.getProperty("os.arch").toLowerCase().equals("x86") {
+             return 32;
+        }
+        if( System.getProperty("os.arch").toLowerCase().equals("i386") {
+             return 32;
+        }
+        return 64;
+    }
+    public static final boolean getIsWindows() {
+        return System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
+    }
     public void execute() throws BuildException {
         String basedir = getProject().getBaseDir().getAbsolutePath();
         srcdir = new File( basedir + "/" + srcdir ).getAbsolutePath();
@@ -113,6 +125,42 @@ public class CMake extends Task {
             throw new BuildException("failed to run cmake");
         }
 
+        int jvmBits = getJvmBits();
+        boolean isWindows = getIsWindows();
+        if( generator == null || generator.equals("") ) {
+            if( isWindows ) {
+                generator = "Visual Studio 12 2013";
+                if( new File( "c:\\program files (x86)\\visual studio 10.0" ).exists() ) {
+                    generator = "Visual Studio 10 2010";
+                }
+                if( new File( "c:\\program files\\visual studio 10.0" ).exists() ) {
+                    generator = "Visual Studio 10 2010";
+                }
+                if( new File( "c:\\program files (x86)\\visual studio 11.0" ).exists() ) {
+                    generator = "Visual Studio 11 2012";
+                }
+                if( new File( "c:\\program files\\visual studio 11.0" ).exists() ) {
+                    generator = "Visual Studio 11 2012";
+                }
+                if( new File( "c:\\program files (x86)\\visual studio 12.0" ).exists() ) {
+                    generator = "Visual Studio 12 2013";
+                }
+                if( new File( "c:\\program files\\visual studio 12.0" ).exists() ) {
+                    generator = "Visual Studio 12 2013";
+                }
+                if( new File( "c:\\program files (x86)\\visual studio 14.0" ).exists() ) {
+                    generator = "Visual Studio 14 2015";
+                }
+                if( new File( "c:\\program files\\visual studio 14.0" ).exists() ) {
+                    generator = "Visual Studio 14 2015";
+                }
+                if( jvmBits == 64 ) {
+                    generator += " Win64";
+                }
+            } else {
+                generator = "Unix Makefiles";
+            }
+        }
         if( generator.equals("Unix Makefiles") ) {
             try {
                 execUsingGobbler(new String[]{"make"}, builddir );
@@ -124,7 +172,7 @@ public class CMake extends Task {
             }   
         } else if( generator.startsWith("Visual Studio") ) {
             try {
-                execUsingGobbler(new String[]{"C:/WINDOWS/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe", "Project.sln", "/p:Configuration=" + releaseType }, builddir );
+                execUsingGobbler(new String[]{"C:/WINDOWS/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe", "ALL_BUILD.vcxproj", "/p:Configuration=" + releaseType }, builddir );
                 if( artifactdirproperty != null ) {
                     getProject().setProperty(artifactdirproperty, builddir + "\\" + releaseType );
                 }
