@@ -85,10 +85,10 @@ public class CMake extends Task {
         this.artifactdirproperty = artifactdirproperty;
     }
     public static final int getJvmBits() {
-        if( System.getProperty("os.arch").toLowerCase().equals("x86") {
+        if( System.getProperty("os.arch").toLowerCase().equals("x86") ) {
              return 32;
         }
-        if( System.getProperty("os.arch").toLowerCase().equals("i386") {
+        if( System.getProperty("os.arch").toLowerCase().equals("i386") ) {
              return 32;
         }
         return 64;
