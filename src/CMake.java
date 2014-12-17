@@ -101,33 +101,30 @@ public class CMake extends Task {
         srcdir = new File( basedir + "/" + srcdir ).getAbsolutePath();
         builddir = new File( basedir + "/" + builddir ).getAbsolutePath();
 
-        System.out.println("Running cmake...");
-        System.out.println("CMakeHome: " + cmakeHome);
-        System.out.println("ReleaseType: " + releaseType);
-        System.out.println("Generator: " + generator);
-        System.out.println("Srcdir: " + srcdir);
-        System.out.println("Builddir: " + builddir);
-
-        if( !new File( cmakeHome + "/bin/cmake" ).exists() && !new File( cmakeHome + "/bin/cmake.exe" ).exists() ) {
-            throw new BuildException( new File( cmakeHome + "/bin/cmake" ).getAbsolutePath() + " doesn't exist.  Please check -Dcmake_home");
+        if( cmakeHome == null || cmakeHome.equals("") || cmakeHome.equals("${cmake_home}" ) ) {
+            if( new File("/usr/bin/cmake").exists() ) {
+                cmakeHome = "/usr";
+            }
         }
-        if( !new File( builddir ).exists() ) {
-            throw new BuildException( "builddir " + srcdir + " doesn't exist.");
+        if( cmakeHome == null || cmakeHome.equals("") || cmakeHome.equals("${cmake_home}" ) ) {
+            if( new File("/usr/local/bin/cmake").exists() ) {
+                cmakeHome = "/usr/local";
+            }
         }
-        if( !new File( builddir ).exists() ) {
-            throw new BuildException( "srcdir " + builddir + " doesn't exist.");
+        if( cmakeHome == null || cmakeHome.equals("") || cmakeHome.equals("${cmake_home}" ) ) {
+            if( new File("c:\\program files\\cmake").exists() ) {
+                cmakeHome = "c:\\program files\\cmake";
+            }
         }
-
-        try{ 
-            execUsingGobbler( new String[]{ cmakeHome + "/bin/cmake", "-G", generator,
-                "-D", "CMAKE_BUILD_TYPE:STRING=" + releaseType, srcdir }, builddir );
-        } catch( Exception e ) {
-            throw new BuildException("failed to run cmake");
+        if( cmakeHome == null || cmakeHome.equals("") || cmakeHome.equals("${cmake_home}" ) ) {
+            if( new File("c:\\program files (x86)\\cmake").exists() ) {
+                cmakeHome = "c:\\program files (x86)\\cmake";
+            }
         }
 
         int jvmBits = getJvmBits();
         boolean isWindows = getIsWindows();
-        if( generator == null || generator.equals("") ) {
+        if( generator == null || generator.equals("") || generator.equals("${generator}" ) ) {
             if( isWindows ) {
                 generator = "Visual Studio 12 2013";
                 if( new File( "c:\\program files (x86)\\visual studio 10.0" ).exists() ) {
@@ -161,6 +158,31 @@ public class CMake extends Task {
                 generator = "Unix Makefiles";
             }
         }
+
+        System.out.println("Running cmake...");
+        System.out.println("CMakeHome: " + cmakeHome);
+        System.out.println("ReleaseType: " + releaseType);
+        System.out.println("Generator: " + generator);
+        System.out.println("Srcdir: " + srcdir);
+        System.out.println("Builddir: " + builddir);
+
+        if( !new File( cmakeHome + "/bin/cmake" ).exists() && !new File( cmakeHome + "/bin/cmake.exe" ).exists() ) {
+            throw new BuildException( new File( cmakeHome + "/bin/cmake" ).getAbsolutePath() + " doesn't exist.  Please check -Dcmake_home");
+        }
+        if( !new File( builddir ).exists() ) {
+            throw new BuildException( "builddir " + srcdir + " doesn't exist.");
+        }
+        if( !new File( builddir ).exists() ) {
+            throw new BuildException( "srcdir " + builddir + " doesn't exist.");
+        }
+
+        try{ 
+            execUsingGobbler( new String[]{ cmakeHome + "/bin/cmake", "-G", generator,
+                "-D", "CMAKE_BUILD_TYPE:STRING=" + releaseType, srcdir }, builddir );
+        } catch( Exception e ) {
+            throw new BuildException("failed to run cmake");
+        }
+
         if( generator.equals("Unix Makefiles") ) {
             try {
                 execUsingGobbler(new String[]{"make"}, builddir );

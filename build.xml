@@ -1,7 +1,4 @@
 <project default="jar">
-    <property name="generator" value="Unix Makefiles" />
-    <property name="cmake_home" value="/usr" />
-
   <path id="project.class.path">
     <pathelement path="${java.class.path}/"/>
   </path>
