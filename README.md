@@ -78,4 +78,14 @@ How easy is it to maintain?
 
 It's 110 lines.  How hard can it be? :-)
 
+News
+====
+
+- Dec 17th 2014:
+  - auto-detects windows directory
+  - auto-detects 32-bit or 64-bit
+  - auto-detects cmake at /usr/bin/cmake or /usr/local/bin/cmake
+  - auto-detects cmake at c:\program files (x86)\cmake
+  - auto-detects Visual Studio, if installed at c:\program files (x86)
+
 
