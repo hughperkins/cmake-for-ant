@@ -1,7 +1,7 @@
 <project default="testtask">
     <target name="testtask">
-        <property name="generator" value="Unix Makefiles" />
-        <property name="cmake_home" value="/usr" />
+<!--        <property name="generator" value="Unix Makefiles" />
+        <property name="cmake_home" value="/usr" />-->
         <taskdef name="cmake" classname="CMake" classpath="../jar/cmake-for-ant.jar" />
         <mkdir dir="cpp/build" />
         <cmake cmakehome="${cmake_home}" releasetype="Release" generator="${generator}" 
