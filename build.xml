@@ -22,10 +22,10 @@
     <target name="test" depends="jar">        
         <subant buildpath="test" />
         <!-- check we strip quotation marks ok, which makes it easier to use Bamboo -->
-        <subant buildpath="test" >
+<!--        <subant buildpath="test" >
             <property name="generator" value="&quot;${generator}&quot;" />
             <property name="cmake_home" value="&quot;${cmake_home}&quot;" />
-        </subant>
+        </subant>-->
     </target>
 
     <target name="clean">
